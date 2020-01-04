@@ -1,0 +1,387 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Copia de trabajo1.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Abigail1410/Trabajo-final/blob/master/Supply%20Chain%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "f3vXesRLOyD4",
+        "colab_type": "code",
+        "outputId": "d0b328c7-5ecb-4690-efa0-5363db713583",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 510
+        }
+      },
+      "source": [
+        "!pip install keras\n",
+        "!pip install tensorflow"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Requirement already satisfied: keras in /usr/local/lib/python3.6/dist-packages (2.2.5)\n",
+            "Requirement already satisfied: keras-applications>=1.0.8 in /usr/local/lib/python3.6/dist-packages (from keras) (1.0.8)\n",
+            "Requirement already satisfied: pyyaml in /usr/local/lib/python3.6/dist-packages (from keras) (3.13)\n",
+            "Requirement already satisfied: numpy>=1.9.1 in /usr/local/lib/python3.6/dist-packages (from keras) (1.17.4)\n",
+            "Requirement already satisfied: keras-preprocessing>=1.1.0 in /usr/local/lib/python3.6/dist-packages (from keras) (1.1.0)\n",
+            "Requirement already satisfied: scipy>=0.14 in /usr/local/lib/python3.6/dist-packages (from keras) (1.3.3)\n",
+            "Requirement already satisfied: h5py in /usr/local/lib/python3.6/dist-packages (from keras) (2.8.0)\n",
+            "Requirement already satisfied: six>=1.9.0 in /usr/local/lib/python3.6/dist-packages (from keras) (1.12.0)\n",
+            "Requirement already satisfied: tensorflow in /usr/local/lib/python3.6/dist-packages (1.15.0)\n",
+            "Requirement already satisfied: astor>=0.6.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (0.8.1)\n",
+            "Requirement already satisfied: six>=1.10.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.12.0)\n",
+            "Requirement already satisfied: keras-preprocessing>=1.0.5 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.1.0)\n",
+            "Requirement already satisfied: protobuf>=3.6.1 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (3.10.0)\n",
+            "Requirement already satisfied: numpy<2.0,>=1.16.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.17.4)\n",
+            "Requirement already satisfied: tensorboard<1.16.0,>=1.15.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.15.0)\n",
+            "Requirement already satisfied: absl-py>=0.7.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (0.8.1)\n",
+            "Requirement already satisfied: keras-applications>=1.0.8 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.0.8)\n",
+            "Requirement already satisfied: grpcio>=1.8.6 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.15.0)\n",
+            "Requirement already satisfied: wrapt>=1.11.1 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.11.2)\n",
+            "Requirement already satisfied: gast==0.2.2 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (0.2.2)\n",
+            "Requirement already satisfied: wheel>=0.26 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (0.33.6)\n",
+            "Requirement already satisfied: opt-einsum>=2.3.2 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (3.1.0)\n",
+            "Requirement already satisfied: tensorflow-estimator==1.15.1 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.15.1)\n",
+            "Requirement already satisfied: google-pasta>=0.1.6 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (0.1.8)\n",
+            "Requirement already satisfied: termcolor>=1.1.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow) (1.1.0)\n",
+            "Requirement already satisfied: setuptools in /usr/local/lib/python3.6/dist-packages (from protobuf>=3.6.1->tensorflow) (42.0.2)\n",
+            "Requirement already satisfied: markdown>=2.6.8 in /usr/local/lib/python3.6/dist-packages (from tensorboard<1.16.0,>=1.15.0->tensorflow) (3.1.1)\n",
+            "Requirement already satisfied: werkzeug>=0.11.15 in /usr/local/lib/python3.6/dist-packages (from tensorboard<1.16.0,>=1.15.0->tensorflow) (0.16.0)\n",
+            "Requirement already satisfied: h5py in /usr/local/lib/python3.6/dist-packages (from keras-applications>=1.0.8->tensorflow) (2.8.0)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "NeLFcZ6IUCst",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import numpy\n",
+        "import matplotlib.pyplot as plt\n",
+        "import pandas\n",
+        "import math\n",
+        "from keras.models import Sequential\n",
+        "from keras.layers import Dense\n",
+        "from keras.layers import LSTM #para predicción de series de tiempo\n",
+        "from keras.layers import Dropout\n",
+        "from sklearn.preprocessing import MinMaxScaler\n",
+        "from sklearn.metrics import mean_squared_error"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "oHkMkLoKUu50",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# fijar número aleatorio para que los resultados sean reproductibles\n",
+        "numpy.random.seed(103596)\n",
+        "# cargando el conjunto de datos\n",
+        "dataframe_noest = pandas.read_csv('https://raw.githubusercontent.com/Sophie-Germain/Thesis_DeepLearning/master/data_noest.csv', usecols=[0], engine='python')\n",
+        "print('Graficamos la serie de tiempo: ')\n",
+        "plt.plot(dataframe_noest, color='#5e6d96')\n",
+        "plt.ylabel('Demanda sin transformar (MWs)')\n",
+        "plt.xlabel('Tiempo')"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "YRjeWvPTU7Sr",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# Hacemos los datos estacionarios en R e importamos el csv\n",
+        "dataframe = pandas.read_csv('https://raw.githubusercontent.com/Sophie-Germain/Thesis_DeepLearning/master/data_est.csv', usecols=[0], engine='python')\n",
+        "print('Graficamos la serie de tiempo estacionaria: ')\n",
+        "plt.plot(dataframe, color='#5e6d96')\n",
+        "plt.ylabel('Demanda estacionaria')\n",
+        "plt.xlabel('Tiempo')"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "qmF2c1H9VthL",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# mantenemos los valores subyacentes\n",
+        "dataset = dataframe.values\n",
+        "# escalamos los datos a (0,1) para poder usarlos en LSTM\n",
+        "# Esta transformación es a menudo utilizada como alternativa al esclamiento de media cero y varianza uno.\n",
+        "scaler = MinMaxScaler(feature_range=(0, 1))\n",
+        "#se realiza la transformación\n",
+        "dataset = scaler.fit_transform(dataset)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "WAGM1cm0WZ2V",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "print('Graficamos la serie de tiempo estacionaria y escalada en (0,1): ')\n",
+        "plt.plot(dataset, color='#5e6d96')\n",
+        "plt.ylabel('Demanda estacionaria y escalada en (0,1)')\n",
+        "plt.xlabel('Tiempo')"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_drH6BSwWhGB",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "print('Creamos dataset de entrenamiento y prueba: ')\n",
+        "# separamos los datos en conjuntos de entrenamiento y prueba (para predicción de series de tiempo)\n",
+        "train_size = int(len(dataset) * 0.8)\n",
+        "train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "rtJBapMQXExt",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# redimensionamos en X=t y Y=t+1\n",
+        "##### convierte un arreglo de valores en una matriz de datos para predicción de series de tiempo\n",
+        "def create_dataset(dataset, look_back=1):\n",
+        "    dataX, dataY = [], []\n",
+        "    for i in range(len(dataset)-look_back-1):\n",
+        "        a = dataset[i:(i+look_back), 0]\n",
+        "        dataX.append(a)\n",
+        "        dataY.append(dataset[i + look_back, 0])\n",
+        "    return numpy.array(dataX), numpy.array(dataY)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ToEAE8VgYc7G",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "#Cambiamos el tamaño de la ventana\n",
+        "look_back = 9\n",
+        "trainX, trainY = create_dataset(train, look_back)\n",
+        "testX, testY = create_dataset(test, look_back)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "h77Xe3Ydj32S",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# actualmente los datos están en la forma de [observaciones, variables]\n",
+        "# redimensiona el input para ser [samples, time steps, features]\n",
+        "trainX = numpy.reshape(trainX, (trainX.shape[0], trainX.shape[1], 1))\n",
+        "testX = numpy.reshape(testX, (testX.shape[0], testX.shape[1], 1))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "MfnCHiBhnk0r",
+        "colab_type": "text"
+      },
+      "source": [
+        "#Modelo"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ahWbrsc5mn0c",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# crea la red LSTM\n",
+        "# La red tiene una capa visible con una entrada, una capa oculta con 4 bloques LSTM o neuronas y \n",
+        "# una capa de salida que hace una sola predicción. La función de activación sigmoide es utilizada \n",
+        "# para los bloques LSTM. La red es entrenada para 100 epocas y un tamaño de lote de 1 es usado.\n",
+        "print('Creando arquitectura LSTM: ')\n",
+        "batch_size = 1\n",
+        "model = Sequential()\n",
+        "# LSTM profundo con 2 capas apiladas cada uno con 4 bloques\n",
+        "##Stateful=true porque no se resetea en cada tiempo\n",
+        "model.add(LSTM(6, batch_input_shape=(batch_size, look_back, 1), stateful=True, return_sequences=False))\n",
+        "model.add(Dense(1))\n",
+        "model.compile(loss='mean_squared_error', optimizer='adam')"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "X1TrDUf-m8Sz",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# ajusta la red LSTM\n",
+        "print('Entrenando modelo: ')\n",
+        "for i in range(200):\n",
+        "    model.fit(trainX, trainY, nb_epoch=1, batch_size=batch_size, verbose=2, shuffle=False)\n",
+        "    model.reset_states()\n",
+        "print('El numero de parametros en cada capa es: ')\n",
+        "model.summary()"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Sp0Y274znNMd",
+        "colab_type": "text"
+      },
+      "source": [
+        "#Evaluación"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "uqSDfOpSHPuI",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# predecir\n",
+        "#print('Haciendo predicciones: ')\n",
+        "trainPredict = model.predict(trainX, batch_size=batch_size)\n",
+        "model.reset_states()\n",
+        "testPredict = model.predict(testX, batch_size=batch_size)\n",
+        "# invert predictions to its original units\n",
+        "print('Desescalando los datos: ')\n",
+        "trainPredict = scaler.inverse_transform(trainPredict)\n",
+        "trainY = scaler.inverse_transform([trainY])\n",
+        "testPredict = scaler.inverse_transform(testPredict)\n",
+        "testY = scaler.inverse_transform([testY])\n",
+        "# calculate root mean squared error"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xVyhT4hTwvin",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "print('Evaluando modelo en entrenamiento y prueba: ')\n",
+        "trainScore = math.sqrt(mean_squared_error(trainY[0], trainPredict[:,0]))\n",
+        "print('Train Score: %.5f RMSE' % (trainScore))\n",
+        "testScore = math.sqrt(mean_squared_error(testY[0], testPredict[:,0]))\n",
+        "print('Test Score: %.5f RMSE' % (testScore))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bsJT7BZFnccc",
+        "colab_type": "text"
+      },
+      "source": [
+        "#Visualización"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_GQJ5XgUnZj0",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "print('Graficando datos originales y estimados por el modelo: ')\n",
+        "# shift train predictions for plotting\n",
+        "trainPredictPlot = numpy.empty_like(dataset)\n",
+        "trainPredictPlot[:, :] = numpy.nan\n",
+        "trainPredictPlot[look_back:len(trainPredict)+look_back, :] = trainPredict\n",
+        "# shift test predictions for plotting\n",
+        "testPredictPlot = numpy.empty_like(dataset)\n",
+        "testPredictPlot[:, :] = numpy.nan\n",
+        "testPredictPlot[len(trainPredict)+(look_back*2)+1:len(dataset)-1, :] = testPredict\n",
+        "# plot baseline and predictions\n",
+        "plt.plot(scaler.inverse_transform(dataset))\n",
+        "#dataset=np.exp(dataset)\n",
+        "plt.plot(trainPredictPlot)\n",
+        "plt.plot(testPredictPlot)\n",
+        "model.summary()"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
